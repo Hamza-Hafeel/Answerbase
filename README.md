@@ -8,6 +8,14 @@ It provides an intuitive management dashboard for administrators and a lightweig
 
 ---
 
+## 📸 Preview
+
+<div align="center">
+  <img src="frontend/public/og-image-v3.jpg" alt="AnswerBase Platform Preview" width="100%" style="border-radius: 8px;" />
+</div>
+
+---
+
 ## 🏗️ System Architecture
 
 The application is built on a decoupled architecture, separating the client-facing interfaces from the AI processing engine.
