@@ -1,5 +1,6 @@
 """AI Gateway client: embeddings + chat completions via OpenAI-compatible API."""
 
+import base64
 import os
 
 import httpx
@@ -82,3 +83,34 @@ async def chat_completion(messages: list[dict], max_tokens: int = 600) -> str:
 def vector_literal(embedding: list[float]) -> str:
     """Format a python list as a pgvector literal string."""
     return "[" + ",".join(f"{x:.8f}" for x in embedding) + "]"
+
+
+async def extract_text_from_image(image_bytes: bytes, mime_type: str) -> str:
+    """Extract printed or handwritten text from an image using Gemini Flash."""
+    url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent"
+    headers = {
+        "x-goog-api-key": os.environ['AI_GATEWAY_API_KEY'],
+        "Content-Type": "application/json"
+    }
+    
+    encoded_image = base64.b64encode(image_bytes).decode("utf-8")
+    
+    payload = {
+        "contents": [{
+            "parts": [
+                {"text": "Extract all text from this image exactly as written. If it contains handwritten notes, transcribe them carefully. Do not add any extra commentary or conversational filler."},
+                {
+                    "inline_data": {
+                        "mime_type": mime_type,
+                        "data": encoded_image
+                    }
+                }
+            ]
+        }]
+    }
+    
+    async with httpx.AsyncClient(timeout=120) as client:
+        resp = await client.post(url, headers=headers, json=payload)
+        resp.raise_for_status()
+        data = resp.json()
+        return data["candidates"][0]["content"]["parts"][0]["text"]

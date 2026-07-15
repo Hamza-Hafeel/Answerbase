@@ -44,6 +44,8 @@ export default function DocumentsPage() {
       'text/plain': ['.txt'],
       'text/markdown': ['.md'],
       'text/csv': ['.csv'],
+      'image/png': ['.png'],
+      'image/jpeg': ['.jpg', '.jpeg'],
     },
     maxSize: 10 * 1024 * 1024,
   });
@@ -102,7 +104,7 @@ export default function DocumentsPage() {
                 {isDragActive ? 'Drop files here…' : 'Drag & drop files here, or click to browse'}
               </p>
               <p className="mt-2 text-sm text-white/40">
-                PDF, TXT, MD, CSV — up to 10 MB each
+                PDF, TXT, MD, CSV, PNG, JPG — up to 10 MB each
               </p>
             </div>
           </div>

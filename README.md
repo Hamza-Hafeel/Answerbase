@@ -31,6 +31,18 @@ The application is built on a decoupled architecture, separating the client-faci
 
 ---
 
+## 💡 What makes AnswerBase different?
+
+While tools like ChatGPT, Google Gems, and NotebookLM are built for general-purpose use or personal research, AnswerBase is a **B2B Enterprise SaaS product**.
+
+1. **It Lives on the Customer's Website:** Unlike Custom GPTs where users must visit OpenAI's website, AnswerBase provides an `embed.js` script. Your customers (businesses) drop this script into their own HTML, instantly adding a customized AI widget to their e-commerce store or SaaS platform.
+2. **Strict Hallucination Prevention:** Standard LLMs will answer off-topic questions or make up facts. AnswerBase utilizes a highly-tuned **RAG pipeline** (Retrieval-Augmented Generation). The AI is strictly grounded to the uploaded documents. If a customer asks a question not covered in the business's policies, the AI will politely decline rather than guessing.
+3. **Automated Customer Support (Not Research):** While NotebookLM is a brilliant tool for private study, AnswerBase is designed to automate public-facing customer service. Businesses pay a monthly Stripe subscription to train the AI on their data and reduce their human support tickets 24/7.
+4. **Multi-Format Ingestion with OCR:** The platform isn't limited to plain text. Businesses can upload **PDF, TXT, MD, CSV, PNG, and JPG** files. Utilizing state-of-the-art vision models, AnswerBase natively performs OCR to extract and index text from scanned documents and even messy handwritten notes.
+5. **API-First Custom Integrations:** While the embeddable widget is the easiest way to launch, AnswerBase is built API-first. Tenants can generate secure, isolated **API Keys** from their dashboard to build entirely custom interfaces, integrate into mobile apps, or hook into automated email responders.
+
+---
+
 ## 🛠️ Technology Stack
 
 ### Frontend Application

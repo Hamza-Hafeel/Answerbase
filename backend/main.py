@@ -328,13 +328,21 @@ def _chunk_text(text: str) -> list[str]:
     return chunks
 
 
-def _extract_text(filename: str, data: bytes) -> str:
+async def _extract_text(filename: str, data: bytes) -> str:
     lower = filename.lower()
     if lower.endswith(".pdf"):
         from pypdf import PdfReader
 
-        reader = PdfReader(io.BytesIO(data))
-        return "\n\n".join((page.extract_text() or "") for page in reader.pages)
+        def _read_pdf():
+            reader = PdfReader(io.BytesIO(data))
+            return "\n\n".join((page.extract_text() or "") for page in reader.pages)
+            
+        return await run_in_threadpool(_read_pdf)
+        
+    if lower.endswith((".png", ".jpg", ".jpeg")):
+        mime_type = "image/png" if lower.endswith(".png") else "image/jpeg"
+        return await ai.extract_text_from_image(data, mime_type)
+        
     # txt / md / csv — treat as utf-8 text
     return data.decode("utf-8", errors="replace")
 
@@ -342,7 +350,7 @@ def _extract_text(filename: str, data: bytes) -> str:
 async def _process_document(doc_id: int, org_id: int, filename: str, data: bytes):
     p = await db.get_pool()
     try:
-        text = await run_in_threadpool(_extract_text, filename, data)
+        text = await _extract_text(filename, data)
         chunks = _chunk_text(text)
         if not chunks:
             raise ValueError("No text could be extracted from this file")
@@ -375,7 +383,7 @@ async def _process_document(doc_id: int, org_id: int, filename: str, data: bytes
         )
 
 
-ALLOWED_EXTENSIONS = (".pdf", ".txt", ".md", ".csv")
+ALLOWED_EXTENSIONS = (".pdf", ".txt", ".md", ".csv", ".png", ".jpg", ".jpeg")
 MAX_UPLOAD_BYTES = 10 * 1024 * 1024
 
 
@@ -387,7 +395,7 @@ async def upload_document(
 ):
     filename = file.filename or "document"
     if not filename.lower().endswith(ALLOWED_EXTENSIONS):
-        raise HTTPException(400, "Supported file types: PDF, TXT, MD, CSV")
+        raise HTTPException(400, "Supported file types: PDF, TXT, MD, CSV, PNG, JPG")
     data = await file.read(MAX_UPLOAD_BYTES + 1)
     if len(data) > MAX_UPLOAD_BYTES:
         raise HTTPException(413, "File too large (max 10 MB)")
