@@ -191,9 +191,35 @@ The script is highly optimized, loads asynchronously, and mounts a responsive ch
 
 ---
 
+## ⚡ API Integrations (Custom UIs)
+
+Tenants who want to build their own custom user interfaces (like native iOS/Android apps) can generate an **API Key** from their dashboard and query their isolated RAG pipeline directly via REST API.
+
+**Example Request:**
+```bash
+curl -X POST "https://answerbase.nexusmod.works/api/chat/native" \
+  -H "Authorization: Bearer ab_YourSecureApiKeyHere" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "question": "What is the refund policy?",
+    "history": []
+  }'
+```
+
+---
+
 ## 🔐 Security Guidelines
 
 This repository is configured with a strict `.gitignore` to prevent the accidental exposure of sensitive data. 
 - **Never commit `.env` files.**
 - Keep `STRIPE_SECRET_KEY` and `AI_GATEWAY_API_KEY` strictly confidential.
 - The `/backend/security.py` module enforces strict JWT validation on all protected routes to ensure data isolation between tenants.
+
+---
+
+## 🗺️ Future Roadmap
+
+- **Slack / Discord Integrations:** Allow businesses to deploy their agent directly into internal communication channels.
+- **Analytics Dashboard:** Visualization of query resolution rates, most common customer questions, and user feedback metrics.
+- **Multilingual Support:** Auto-translate documents and provide real-time translation for global customer bases.
+- **Web Crawling:** Ingest documentation directly from live website URLs in addition to static file uploads.
