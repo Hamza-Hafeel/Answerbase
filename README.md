@@ -6,6 +6,21 @@ AnswerBase is a full-stack, multi-tenant enterprise application that transforms 
 
 It provides an intuitive management dashboard for administrators and a lightweight, embeddable chat widget script for seamless integration into any external website.
 
+### ✨ Key Features
+
+| Feature | Description |
+|---|---|
+| 📄 Multi-Format Document Ingestion | Upload **PDF, TXT, MD, CSV, PNG, JPG** files. Images are processed with Gemini Vision OCR for handwritten note support. |
+| 🤖 RAG-Powered AI Chat | Responses are strictly grounded to uploaded documents using vector similarity search (pgvector + HNSW indexing). |
+| 🔌 Embeddable Widget | A single `<script>` tag drops a fully styled, animated chat widget onto any external website. |
+| 🔑 API Key Management | Tenants generate isolated API keys for building custom integrations (mobile apps, Slack bots, email responders). |
+| 📊 Analytics Dashboard | 14-day message volume charts, top questions, document counts, and usage tracking against plan limits. |
+| 💬 Conversation History | Full searchable log of every visitor conversation with timestamps and message-level detail. |
+| 🎨 Widget Customization | Tenants can rename their bot and customize the welcome message directly from the dashboard. |
+| 💳 Stripe Billing | Three subscription tiers (Free / Pro / Business) with Stripe Checkout, webhook-driven plan upgrades, and usage metering. |
+| 🔐 Google OAuth | One-click sign-in with Google, alongside traditional email/password registration. |
+| 👑 Superadmin Panel | Platform-wide admin dashboard showing all tenants, user counts, document counts, MRR, and daily message volume. |
+
 ---
 
 ## 📸 Preview
@@ -53,7 +68,7 @@ While tools like ChatGPT, Google Gems, and NotebookLM are built for general-purp
 
 ### Backend API
 - **Framework:** FastAPI (Python 3.10+)
-- **Database ORM:** SQLAlchemy (async)
+- **Database Driver:** asyncpg (async connection pooling)
 - **AI Integration:** OpenAI-compatible API Gateway
 - **Server:** Uvicorn
 
@@ -139,8 +154,8 @@ NEXT_PUBLIC_API_URL=http://localhost:8000
 
 ### 2. Clone the Repository
 ```bash
-git clone https://github.com/yourusername/answerbase.git
-cd answerbase
+git clone https://github.com/Hamza-Hafeel/Answerbase.git
+cd Answerbase
 ```
 
 ### 3. Install Dependencies
@@ -220,6 +235,12 @@ This repository is configured with a strict `.gitignore` to prevent the accident
 ## 🗺️ Future Roadmap
 
 - **Slack / Discord Integrations:** Allow businesses to deploy their agent directly into internal communication channels.
-- **Analytics Dashboard:** Visualization of query resolution rates, most common customer questions, and user feedback metrics.
 - **Multilingual Support:** Auto-translate documents and provide real-time translation for global customer bases.
 - **Web Crawling:** Ingest documentation directly from live website URLs in addition to static file uploads.
+- **Email Ticket Integration:** Auto-respond to customer support emails using the RAG pipeline.
+
+---
+
+## 📄 License
+
+This project is built and maintained by [Hamza Hafeel](https://github.com/Hamza-Hafeel).
