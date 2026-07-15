@@ -6,8 +6,8 @@ import os
 import httpx
 
 GATEWAY_BASE = "https://generativelanguage.googleapis.com/v1beta/openai"
-EMBEDDING_MODEL = "text-embedding-004"  # 768 dims
-CHAT_MODEL = "gemini-1.5-flash"
+EMBEDDING_MODEL = "gemini-embedding-2"  # 768 dims
+CHAT_MODEL = "gemini-2.5-flash"
 
 
 def _headers() -> dict:
@@ -34,15 +34,20 @@ async def embed_texts(texts: list[str]) -> list[list[float]]:
         } for t in texts
     ]
     
-    async with httpx.AsyncClient(timeout=60) as client:
-        resp = await client.post(
-            url,
-            headers=headers,
-            json={"requests": requests},
-        )
-        resp.raise_for_status()
-        data = resp.json()
-        return [d["values"] for d in data["embeddings"]]
+    try:
+        async with httpx.AsyncClient(timeout=60) as client:
+            resp = await client.post(
+                url,
+                headers=headers,
+                json={"requests": requests},
+            )
+            resp.raise_for_status()
+            data = resp.json()
+            return [d["values"] for d in data["embeddings"]]
+    except httpx.HTTPStatusError:
+        raise RuntimeError("Embedding service temporarily unavailable. Please try again.")
+    except Exception:
+        raise RuntimeError("Failed to generate embeddings. Please try again later.")
 
 
 async def chat_completion(messages: list[dict], max_tokens: int = 600) -> str:
@@ -73,11 +78,16 @@ async def chat_completion(messages: list[dict], max_tokens: int = 600) -> str:
     if system_instruction:
         payload["systemInstruction"] = system_instruction
         
-    async with httpx.AsyncClient(timeout=120) as client:
-        resp = await client.post(url, headers=headers, json=payload)
-        resp.raise_for_status()
-        data = resp.json()
-        return data["candidates"][0]["content"]["parts"][0]["text"]
+    try:
+        async with httpx.AsyncClient(timeout=120) as client:
+            resp = await client.post(url, headers=headers, json=payload)
+            resp.raise_for_status()
+            data = resp.json()
+            return data["candidates"][0]["content"]["parts"][0]["text"]
+    except httpx.HTTPStatusError:
+        raise RuntimeError("AI service temporarily unavailable. Please try again.")
+    except Exception:
+        raise RuntimeError("Failed to generate a response. Please try again later.")
 
 
 def vector_literal(embedding: list[float]) -> str:
@@ -86,8 +96,8 @@ def vector_literal(embedding: list[float]) -> str:
 
 
 async def extract_text_from_image(image_bytes: bytes, mime_type: str) -> str:
-    """Extract printed or handwritten text from an image using Gemini Flash."""
-    url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent"
+    """Extract printed or handwritten text from an image using Gemini 2.5 Flash."""
+    url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
     headers = {
         "x-goog-api-key": os.environ['AI_GATEWAY_API_KEY'],
         "Content-Type": "application/json"
@@ -109,8 +119,13 @@ async def extract_text_from_image(image_bytes: bytes, mime_type: str) -> str:
         }]
     }
     
-    async with httpx.AsyncClient(timeout=120) as client:
-        resp = await client.post(url, headers=headers, json=payload)
-        resp.raise_for_status()
-        data = resp.json()
-        return data["candidates"][0]["content"]["parts"][0]["text"]
+    try:
+        async with httpx.AsyncClient(timeout=120) as client:
+            resp = await client.post(url, headers=headers, json=payload)
+            resp.raise_for_status()
+            data = resp.json()
+            return data["candidates"][0]["content"]["parts"][0]["text"]
+    except httpx.HTTPStatusError:
+        raise RuntimeError("OCR service temporarily unavailable. Please try again.")
+    except Exception:
+        raise RuntimeError("Failed to extract text from image. Please try again later.")

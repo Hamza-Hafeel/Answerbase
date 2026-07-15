@@ -35,6 +35,17 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    """Catch any unhandled exception and return a safe generic message."""
+    import traceback
+    traceback.print_exc()  # Log full error to server console for debugging
+    return fastapi.responses.JSONResponse(
+        status_code=500,
+        content={"detail": "An internal error occurred. Please try again later."},
+    )
+
 # ---------------------------------------------------------------------------
 # Plans (server-side source of truth)
 # ---------------------------------------------------------------------------
@@ -153,7 +164,7 @@ async def login(body: LoginBody):
 async def google_auth(body: GoogleAuthBody):
     client_id = os.environ.get("GOOGLE_CLIENT_ID")
     if not client_id:
-        raise HTTPException(500, "Google Login is not configured")
+        raise HTTPException(500, "Google Login is currently unavailable")
     try:
         idinfo = await run_in_threadpool(
             id_token.verify_oauth2_token,
@@ -355,9 +366,11 @@ async def _process_document(doc_id: int, org_id: int, filename: str, data: bytes
         if not chunks:
             raise ValueError("No text could be extracted from this file")
         total = 0
-        for i in range(0, len(chunks), 32):
-            batch = chunks[i : i + 32]
-            embeddings = await ai.embed_texts(batch)
+        for i in range(0, len(chunks), 8):
+            batch = chunks[i : i + 8]
+            # Truncate each chunk to ~2000 chars to stay within embedding API token limits
+            batch_trimmed = [c[:2000] for c in batch]
+            embeddings = await ai.embed_texts(batch_trimmed)
             async with p.acquire() as conn:
                 await conn.executemany(
                     """
@@ -376,10 +389,18 @@ async def _process_document(doc_id: int, org_id: int, filename: str, data: bytes
             total,
         )
     except Exception as exc:  # noqa: BLE001
+        # Sanitize error messages to prevent leaking internal URLs or stack traces
+        error_msg = str(exc)
+        if "googleapis.com" in error_msg or "httpx" in error_msg:
+            error_msg = "AI processing service temporarily unavailable. Please try again."
+        elif "extract" in error_msg.lower() or "text" in error_msg.lower():
+            error_msg = str(exc)[:200]
+        else:
+            error_msg = error_msg[:200]
         await p.execute(
             "UPDATE documents SET status = 'failed', error = $2 WHERE id = $1",
             doc_id,
-            str(exc)[:500],
+            error_msg,
         )
 
 
