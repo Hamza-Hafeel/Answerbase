@@ -6,24 +6,24 @@ AnswerBase is a full-stack, multi-tenant enterprise application that transforms 
 
 It provides an intuitive management dashboard for administrators and a lightweight, embeddable chat widget script for seamless integration into any external website.
 
-### ✨ Key Features
+### Key Features
 
 | Feature | Description |
 |---|---|
-| 📄 Multi-Format Document Ingestion | Upload **PDF, TXT, MD, CSV, PNG, JPG** files. Images are processed with Gemini Vision OCR for handwritten note support. |
-| 🤖 RAG-Powered AI Chat | Responses are strictly grounded to uploaded documents using vector similarity search (pgvector + HNSW indexing). |
-| 🔌 Embeddable Widget | A single `<script>` tag drops a fully styled, animated chat widget onto any external website. |
-| 🔑 API Key Management | Tenants generate isolated API keys for building custom integrations (mobile apps, Slack bots, email responders). |
-| 📊 Analytics Dashboard | 14-day message volume charts, top questions, document counts, and usage tracking against plan limits. |
-| 💬 Conversation History | Full searchable log of every visitor conversation with timestamps and message-level detail. |
-| 🎨 Widget Customization | Tenants can rename their bot and customize the welcome message directly from the dashboard. |
-| 💳 Stripe Billing | Three subscription tiers (Free / Pro / Business) with Stripe Checkout, webhook-driven plan upgrades, and usage metering. |
-| 🔐 Google OAuth | One-click sign-in with Google, alongside traditional email/password registration. |
-| 👑 Superadmin Panel | Platform-wide admin dashboard showing all tenants, user counts, document counts, MRR, and daily message volume. |
+| Multi-Format Document Ingestion | Upload **PDF, TXT, MD, CSV, PNG, JPG** files. Images are processed with Gemini Vision OCR for handwritten note support. |
+| RAG-Powered AI Chat | Responses are strictly grounded to uploaded documents using vector similarity search (pgvector + HNSW indexing). |
+| Embeddable Widget | A single `<script>` tag drops a fully styled, animated chat widget onto any external website. |
+| API Key Management | Tenants generate isolated API keys for building custom integrations (mobile apps, Slack bots, email responders). |
+| Analytics Dashboard | 14-day message volume charts, top questions, document counts, and usage tracking against plan limits. |
+| Conversation History | Full searchable log of every visitor conversation with timestamps and message-level detail. |
+| Widget Customization | Tenants can rename their bot and customize the welcome message directly from the dashboard. |
+| Stripe Billing | Three subscription tiers (Free / Pro / Business) with Stripe Checkout, webhook-driven plan upgrades, and usage metering. |
+| Google OAuth | One-click sign-in with Google, alongside traditional email/password registration. |
+| Superadmin Panel | Platform-wide admin dashboard showing all tenants, user counts, document counts, MRR, and daily message volume. |
 
 ---
 
-## 📸 Preview
+## Preview
 
 <div align="center">
   <img src="frontend/public/og-image-v3.jpg" alt="AnswerBase Platform Preview" width="100%" style="border-radius: 8px;" />
@@ -31,7 +31,7 @@ It provides an intuitive management dashboard for administrators and a lightweig
 
 ---
 
-## 🏗️ System Architecture
+## System Architecture
 
 The application is built on a decoupled architecture, separating the client-facing interfaces from the AI processing engine.
 
@@ -46,7 +46,7 @@ The application is built on a decoupled architecture, separating the client-faci
 
 ---
 
-## 💡 What makes AnswerBase different?
+## What makes AnswerBase different?
 
 While tools like ChatGPT, Google Gems, and NotebookLM are built for general-purpose use or personal research, AnswerBase is a **B2B Enterprise SaaS product**.
 
@@ -58,7 +58,7 @@ While tools like ChatGPT, Google Gems, and NotebookLM are built for general-purp
 
 ---
 
-## 🛠️ Technology Stack
+## Technology Stack
 
 ### Frontend Application
 - **Framework:** Next.js (App Router)
@@ -78,7 +78,7 @@ While tools like ChatGPT, Google Gems, and NotebookLM are built for general-purp
 
 ---
 
-## 📂 Comprehensive Project Structure
+## Comprehensive Project Structure
 
 ```text
 answerbase/
@@ -115,7 +115,7 @@ answerbase/
 
 ---
 
-## ⚙️ Environment Variables
+## Environment Variables
 
 Before starting the application, you must configure your environment variables. Duplicate the `.env.example` file to `.env` in the root directory and populate the following fields:
 
@@ -144,7 +144,7 @@ NEXT_PUBLIC_API_URL=http://localhost:8000
 
 ---
 
-## 🚀 Local Development Setup
+## Local Development Setup
 
 ### 1. Prerequisites
 - **Node.js** (v18 or higher)
@@ -195,7 +195,7 @@ npm run backend
 
 ---
 
-## 🌐 Embedding the Widget
+## Embedding the Widget
 
 To integrate the AnswerBase AI agent into an external website, tenants simply copy their unique snippet from the dashboard and paste it into their website's HTML `<head>` or before the closing `</body>` tag:
 
@@ -206,7 +206,7 @@ The script is highly optimized, loads asynchronously, and mounts a responsive ch
 
 ---
 
-## ⚡ API Integrations (Custom UIs)
+## API Integrations (Custom UIs)
 
 Tenants who want to build their own custom user interfaces (like native iOS/Android apps) can generate an **API Key** from their dashboard and query their isolated RAG pipeline directly via REST API.
 
@@ -223,7 +223,7 @@ curl -X POST "https://answerbase.nexusmod.works/api/chat/native" \
 
 ---
 
-## 🔐 Security Guidelines
+## Security Guidelines
 
 This repository is configured with a strict `.gitignore` to prevent the accidental exposure of sensitive data. 
 - **Never commit `.env` files.**
