@@ -232,7 +232,7 @@ This repository is configured with a strict `.gitignore` to prevent the accident
 
 ---
 
-## 🗺️ Future Roadmap
+## Future Roadmap
 
 - **Slack / Discord Integrations:** Allow businesses to deploy their agent directly into internal communication channels.
 - **Multilingual Support:** Auto-translate documents and provide real-time translation for global customer bases.
@@ -241,6 +241,6 @@ This repository is configured with a strict `.gitignore` to prevent the accident
 
 ---
 
-## 📄 License
+## License
 
 This project is built and maintained by [Hamza Hafeel](https://github.com/Hamza-Hafeel).
